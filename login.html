@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login - Kumawat Enterprises</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body class="login-body">
+    <div class="login-card">
+        <div class="login-icon">
+            <svg width="34" height="34" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M6 2H14L19 7V22H6V2Z" stroke="white" stroke-width="1.6" stroke-linejoin="round"/>
+                <path d="M14 2V7H19" stroke="white" stroke-width="1.6" stroke-linejoin="round"/>
+                <path d="M9 12H16M9 15.5H16M9 9H12" stroke="white" stroke-width="1.6" stroke-linecap="round"/>
+            </svg>
+        </div>
+
+        <h1 class="login-title">Kumawat Enterprises</h1>
+        <p class="login-subtitle">Sign in to manage your invoices</p>
+
+        <input type="text" id="username" placeholder="Username">
+        <input type="password" id="password" placeholder="Password">
+        <button onclick="login()" class="login-btn">Login</button>
+        <p id="loginError" class="login-error"></p>
+    </div>
+    <script src="config.js"></script>
+    <script>
+        async function login() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const res = await fetch(API_BASE +'/api/auth/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, password })
+            });
+            const data = await res.json();
+            if (res.ok) {
+                localStorage.setItem('token', data.token);
+                window.location.href = 'index.html';
+            } else {
+                document.getElementById('loginError').textContent = data.error;
+            }
+        }
+
+        // Let Enter key submit from either field, matching the main app's keyboard-friendly feel
+        document.getElementById('password').addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') login();
+        });
+    </script>
+</body>
+</html>

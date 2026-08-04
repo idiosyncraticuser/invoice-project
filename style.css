@@ -1,0 +1,542 @@
+/*
+header style line 258
+footer style line 308
+*/
+
+
+
+/* Main container styling */
+.container-main {
+  background: #fff;
+  max-width: 1000px;
+  margin: 40px auto;  
+  padding: 30px 40px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-left: 6px solid #007bff; /* Accent border */
+}
+/*Sets the top and bottom margin to 40 pixels. "auto" sets the left and right margin to auto, which centers the element horizontally if it has a fixed width.
+padding sets the distance between element and box to 30 px top and bottom, 40px to right and left.
+*/
+
+/* "Invoice Generator heading style below */
+h2 {
+  text-align: center;
+  margin-bottom: 60px;
+  font-family: "Poppins", sans-serif;
+}
+h2 span {
+  color: #007bff; /* Highlighted blue text in heading */
+}
+
+/* Vertical Spacing for main sections */
+.invoice-details,
+.add-item,
+.items-table,
+.totals,
+.actions {
+  margin-bottom: 20px;
+}
+/*Invoice Details Grid*/
+
+.invoice-details{
+  display: grid;
+  margin-top: 30px;
+  gap: 3rem;  /*rem means root em, size of html tag is 1 rem , by default 16px. so 3rem means 48px*/
+  grid-template-columns: 1fr 1fr 1fr;
+}
+.invoice-no, .invoiceDate{
+  grid-area: 1/1/2/2;
+}
+.clientName{
+  margin-top: 30px;
+  grid-area: 1/2/2/3;
+}
+.seller-details{
+  margin-top: 0px;
+  grid-area: 1/3/2/4;
+}
+.invoice-no{
+  margin-top:0px;
+} 
+/* Style form labels */
+label {
+  font-weight: bold;
+  letter-spacing: 0.5px; /*Space between letters*/
+}
+
+.seller-details h3{
+  margin-left: 4px;
+  font-size: 22px;
+}
+.seller-details h6{
+  margin-left: 4px;
+  font-size: 10px;
+}
+
+/* Style text, number, and date inputs */
+/*element[attribute="type"] targeting <input> elements with a specific type attribute*/
+input[type="text"],
+input[type="number"],
+input[type="date"] {
+  padding: 6px;
+  margin-bottom: 8px;
+  width: 300px; /*box width*/
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-shadow: 1px 1px 1px 1px #007bff;
+  transition: border 0.3s, box-shadow 0.3s;
+}
+
+/* Focus effect for inputs */
+input[type="text"]:focus,
+input[type="number"]:focus,
+input[type="date"]:focus {
+  border: 1.5px solid #007bff;
+  box-shadow: 0 2px 8px grey;
+}
+
+input[readonly] {
+  background-color: #f0f0f0;
+  cursor: not-allowed;
+}
+
+/* Table styling */
+table {
+  width: 100%;
+  margin-bottom: 10px;
+}
+th,
+td {
+  padding: 8px;
+  text-align: center;
+}
+th {
+  background: #f0f0f0;
+}
+
+/* Totals section styling */
+.totals {
+  text-align: right;
+  border-top: 1px solid #f0f0f0; /* Divider line */
+  padding-top: 10px;
+}
+.logout{
+  padding: 8px 18px;
+  margin-right: 10px;
+  border: none;
+  background: #cf2f2f;
+  color: #fff;
+  border-radius: 4px;
+  box-shadow: 0 2px 6px grey;
+  transition: background 0.2s, box-shadow 0.2s;
+  cursor: pointer;
+
+}
+/* Button styling for actions */
+.actions button {
+  padding: 8px 18px;
+  margin-right: 10px;
+  border: none;
+  background: #007bff;
+  color: #fff;
+  border-radius: 4px;
+  box-shadow: 0 2px 6px grey;
+  transition: background 0.2s, box-shadow 0.2s;
+  cursor: pointer;
+}
+.actions button:last-child {
+  background: #28a745; /* Special color for last button */
+}
+
+/* Hover effects for Generate Invoice, Reset */
+.actions button:hover:not(:disabled) {
+  background: #0056b3;
+  box-shadow: 0 4px 12px grey;
+}
+.actions button:last-child:hover:not(:disabled) {
+  background: #218838;
+}
+
+/* Print button styling */
+.actions button:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+/* Narrower number input in add-item section */
+.add-item input[type="number"] {
+  width: 110px;
+}
+
+/* Responsive layout for add-item row */
+.item-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+
+/* Wider description input in item-row */
+.item-row input[type="text"]#itemDesc {
+  flex: 2 1 200px; /* Wider for description */
+  width: 180px;
+  flex-shrink: 0;
+}
+
+/* Narrower number inputs in item-row */
+.item-row input[type="number"] {
+  flex: 1 1 80px; /* Narrower for others */
+  width: 80px;
+  flex-shrink: 0;
+}
+
+/* Button styling in item-row */
+.item-row button {
+  flex: 0 0 auto;
+  padding: 6px 14px;
+  height: 38px;
+  flex-shrink: 0;
+}
+
+/* Responsive: stack item-row on small screens */
+@media screen and (max-width: 830px) {
+  .item-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .item-row input,
+  .item-row button {
+    width: 100%;
+  }
+}
+@media screen and (max-width: 975px) {
+
+  .invoice-details {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+
+/* Responsive: stack item-row on even smaller screens */
+@media screen and (max-width: 650px) {
+
+  .item-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .item-row input,
+  .item-row button {
+    width: 100%;
+  }
+}
+
+/* Responsive: adjust invoice-details and add-item row */
+@media screen and (max-width: 600px) {
+  .invoice-details div,
+  .add-item .item-row {
+    flex-direction: column;
+    display: flex;
+    gap: 8px;
+  }
+
+  .container {
+    padding: 20px;
+  }
+  table th,
+  table td {
+    font-size: 13px;
+    padding: 6px;
+  }
+}
+
+/* Prevent horizontal overflow in item-row */
+.item-row {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 10px;
+  align-items: center;
+  overflow-x: auto;
+}
+
+/* Subtle hover effect for table rows */
+.items-table tr:hover {
+  background: #f9f9f9;
+}
+
+/* Header bar styling */
+.header {
+  /* background-color: #007bff;
+  margin-top: -50px;
+  height: 70px; */
+  background: linear-gradient(to right, #007bff, #0056b3);
+  color: white;
+  padding: 20px;
+  display: flex;
+  
+  /* align-items: center; */
+  /* box-shadow: 0 400px 8px rgba(0,0,0,0.1); */
+}
+
+.header-content {
+  display: grid;
+  grid-template-columns: 1fr 18fr 1fr;
+  gap: 20px;
+}
+
+.header-logo {
+  height: 80px;
+  width: 80px;
+  margin-top: -12px;
+  border-radius: 15px;
+}
+
+.header h1 {
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600 ;
+  font-size: 35px;
+}
+
+.tagline {
+  font-size: 15px;
+  margin-top: 0px;
+  font-style: italic;
+  color: #e0e0e0;
+}
+/* //Header text styling
+.header-text {
+  font-family: "Poppins", sans-serif;
+  font-weight: 500;
+  font-size: 40px;
+  padding: 10px;
+  text-align: left;
+  margin-top: 50px;
+  padding-left: 50px;
+  color: white;
+} */
+
+/* Header bar styling end */
+.footer {
+  background: #007bff;
+  color: white;
+  padding: 15px 0;
+  text-align: center;
+  box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
+  position: relative;
+  bottom: 0;
+  width: 100%;
+}
+
+/* Header text styling */
+/* .footer-text {
+  font-family: "Delius";
+  font-size: 15px;
+  padding: 10px;
+  text-align: center;
+  margin-top: 25px;
+} */
+.footer-content {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  gap: 1px;
+  font-size: 14px;
+  font-family: 'Poppins', sans-serif;
+}
+
+/* Add a soft gradient to the body background */
+body {
+  background: linear-gradient(120deg, #f4f4f4 60%, #e3f0ff 100%);
+}
+.btn-css{
+  margin-top: -170px;
+}
+
+.add-btn-style{
+  color: #fff;
+  border-radius: 4px;
+  border: 0px;
+  box-shadow: 0 2px 6px rgba(0, 123, 255, 0.15);
+  transition: background 0.2s, box-shadow 0.2s;
+  cursor: pointer;
+  background-color: #28a745;
+  margin-top: -8px;
+}
+
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 10mm;
+  }
+  body * {
+    visibility: hidden;
+  }
+  #invoiceOutput, #invoiceOutput * {
+    visibility: visible;
+  }
+  #invoiceOutput {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+  }
+}
+
+.invoice-double {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.invoice-half {
+  height: 50vh;
+  padding: 15px 20px;
+  box-sizing: border-box;
+  position: relative;
+  overflow: hidden;
+  border-bottom: 2px dashed #000;
+}
+
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 10mm;
+  }
+
+  body * {
+    visibility: hidden;
+  }
+
+  #invoiceOutput, #invoiceOutput * {
+    visibility: visible;
+  }
+
+  #invoiceOutput {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+  }
+
+  .invoice-half {
+    height: 50%;
+    page-break-inside: avoid;
+  }
+}
+
+/* Add this new rule */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.header-actions a {
+  color: white;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.header-actions a:hover {
+  text-decoration: underline;
+}
+
+.header-actions button {
+  padding: 6px 14px;
+  border: 1px solid white;
+  background: transparent;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background 0.2s;
+}
+
+.header-actions button:hover {
+  background: rgba(255,255,255,0.15);
+}
+
+/* ---------- Login Page ---------- */
+.login-body {
+  min-height: 100vh;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #007bff, #0056b3 60%, #003d82);
+}
+
+.login-card {
+  background: #fff;
+  width: 100%;
+  max-width: 360px;
+  padding: 40px 32px;
+  border-radius: 10px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+  text-align: center;
+}
+
+.login-icon {
+  width: 60px;
+  height: 60px;
+  margin: 0 auto 18px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #007bff, #0056b3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 10px rgba(0, 123, 255, 0.35);
+}
+
+.login-title {
+  font-family: 'Poppins', sans-serif;
+  font-size: 22px;
+  font-weight: 600;
+  margin: 0 0 4px;
+}
+
+.login-subtitle {
+  font-size: 13px;
+  color: #777;
+  margin: 0 0 24px;
+}
+
+.login-card input[type="text"],
+.login-card input[type="password"] {
+  width: 100%;
+  box-sizing: border-box;
+  margin-bottom: 14px;
+}
+
+.login-btn {
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  background: #007bff;
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 2px 6px grey;
+  transition: background 0.2s, box-shadow 0.2s;
+}
+
+.login-btn:hover {
+  background: #0056b3;
+  box-shadow: 0 4px 12px grey;
+}
+
+.login-error {
+  color: #dc3545;
+  font-size: 13px;
+  min-height: 16px;
+  margin-top: 10px;
+}

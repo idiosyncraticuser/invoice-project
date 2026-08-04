@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Invoice History</title>
+  <link rel="stylesheet" href="style.css">
+  
+</head>
+<body>
+  <div class="container-main">
+    <div class="header">
+        <div class="header-content">
+            <img src="Black & Blue Minimalist Modern Initial Font Logo.png" alt="Logo" class="header-logo" />
+            <div>
+                <h1>Kumawat Enterprises</h1>
+                <p class="tagline">Powering Industries with Trust & Tech</p>
+            </div>
+        </div>
+        <div class="header-actions">
+            <a href="index.html">+ New Invoice</a>
+            <button onclick="logout()">Logout</button>
+        </div>
+    </div>
+    <h2>Invoice <span>History</span></h2>
+    <a href="index.html">+ New Invoice</a>
+    <button onclick="logout()" style="float:right;">Logout</button>
+
+    <div style="margin:15px 0;">
+      <input type="text" id="searchInvoiceNo" placeholder="Invoice No.">
+      <input type="text" id="searchClientName" placeholder="Client Name">
+      <input type="date" id="searchFrom">
+      <input type="date" id="searchTo">
+      <button onclick="searchInvoices()">Search</button>
+    </div>
+
+    <table id="historyTable" border="1" style="width:100%;">
+      <thead>
+        <tr><th>Invoice No.</th><th>Date</th><th>Client</th><th>Grand Total</th><th>View</th></tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+
+    <div id="viewOutput" style="display:none; margin-top:20px;"></div>
+  </div>
+  <script src="config.js"></script>
+  <script>
+    const token = localStorage.getItem('token');
+    if (!token) window.location.href = 'login.html';
+
+    function logout() {
+        localStorage.removeItem('token');
+        window.location.href = 'login.html';
+    }
+
+    async function searchInvoices() {
+        const invoiceNo = document.getElementById('searchInvoiceNo').value;
+        const clientName = document.getElementById('searchClientName').value;
+        const from = document.getElementById('searchFrom').value;
+        const to = document.getElementById('searchTo').value;
+
+        const params = new URLSearchParams({ invoiceNo, clientName, from, to });
+        const res = await fetch(API_BASE +'/api/invoices/search?' + params, {
+            headers: { 'Authorization': 'Bearer ' + token }
+        });
+        const invoices = await res.json();
+
+        const tbody = document.querySelector('#historyTable tbody');
+        tbody.innerHTML = '';
+        invoices.forEach(inv => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td>${inv.invoiceNo}</td>
+                <td>${new Date(inv.date).toLocaleDateString()}</td>
+                <td>${inv.clientId.name}</td>
+                <td>₹${inv.grandTotal.toFixed(2)}</td>
+                <td><button onclick="viewInvoice('${inv._id}')">View</button></td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+
+    async function viewInvoice(id) {
+        const res = await fetch(API_BASE +'/api/invoices/' + id, {
+            headers: { 'Authorization': 'Bearer ' + token }
+        });
+        const inv = await res.json();
+
+        let rows = inv.items.map(i => `
+            <tr><td>${i.desc}</td><td>${i.qty}</td><td>₹${i.price}</td>
+            <td>${i.discount}%</td><td>${i.cgst}%</td><td>${i.sgst}%</td></tr>
+        `).join('');
+
+        document.getElementById('viewOutput').innerHTML = `
+            <h4>Invoice #${inv.invoiceNo} — ${inv.clientId.name}</h4>
+            <table border="1" style="width:100%;">
+                <tr><th>Desc</th><th>Qty</th><th>Price</th><th>Disc%</th><th>CGST%</th><th>SGST%</th></tr>
+                ${rows}
+            </table>
+            <p><strong>Grand Total: ₹${inv.grandTotal.toFixed(2)}</strong></p>
+            <button onclick="window.print()">Print</button>
+        `;
+        document.getElementById('viewOutput').style.display = 'block';
+    }
+
+    searchInvoices(); // load all invoices on page open
+  </script>
+</body>
+</html>
