@@ -10,10 +10,12 @@
   "author": "",
   "license": "ISC",
   "type": "commonjs",
-  "dependencies": {
-    "cors": "^2.8.6",
-    "dotenv": "^17.4.2",
-    "express": "^5.2.1",
-    "mongoose": "^9.7.4"
-  }
+ "dependencies": {
+    "bcryptjs": "...",
+    "cors": "...",
+    "dotenv": "...",
+    "express": "...",
+    "jsonwebtoken": "...",
+    "mongoose": "..."
+}
 }
