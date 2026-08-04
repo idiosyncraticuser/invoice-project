@@ -540,3 +540,15 @@ body {
   min-height: 16px;
   margin-top: 10px;
 }
+
+@media print {
+  #viewOutput, #viewOutput * {
+    visibility: visible;
+  }
+  #viewOutput {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+  }
+}
