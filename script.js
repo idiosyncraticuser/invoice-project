@@ -221,13 +221,7 @@ function generateInvoice() {
 
 
 function printInvoice() {
-    const output = document.getElementById('invoiceOutput').innerHTML;
-    const win = window.open('', '', 'width=800,height=600');
-    win.document.write('<html><head><title>Invoice</title></head><body>');
-    win.document.write(output);
-    win.document.write('</body></html>');
-    win.print();
-    win.close();
+    window.print();
 }
 
 function resetInvoice() {
