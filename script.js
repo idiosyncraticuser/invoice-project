@@ -105,7 +105,7 @@ function generateInvoice() {
         return;
     }
     
-    fetch('http://localhost:5000/api/invoices', {
+    fetch(API_BASE + '/api/invoices', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
