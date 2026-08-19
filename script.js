@@ -105,6 +105,10 @@ function generateInvoice() {
         return;
     }
     
+        const generateBtn = document.getElementById('generateBtn');
+    generateBtn.disabled = true;
+    generateBtn.textContent = 'Saving...';
+
     fetch(API_BASE + '/api/invoices', {
         method: 'POST',
         headers: {
@@ -121,8 +125,19 @@ function generateInvoice() {
         })
     })
     .then(res => res.json())
-    .then(data => { if (data.error) alert(data.error); })
-    .catch(err => console.error('Save failed:', err));
+    .then(data => {
+        if (data.error) {
+            alert('Could not save invoice: ' + data.error);
+        }
+    })
+    .catch(err => {
+        alert('Could not save invoice. Please check your internet connection and try again.');
+        console.error('Save failed:', err);
+    })
+    .finally(() => {
+        generateBtn.disabled = false;
+        generateBtn.textContent = 'Generate Invoice';
+    });
 
     const sellerDetails = `
         <div style="font-size:14px;">

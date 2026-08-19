@@ -78,6 +78,58 @@ router.get('/search', async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 });
+
+// Dashboard stats — totals, monthly trend, top clients
+router.get('/stats', async (req, res) => {
+    try {
+        const invoices = await Invoice.find().populate('clientId');
+
+        let totalRevenue = 0;
+        let thisMonthRevenue = 0;
+        let thisMonthCount = 0;
+        const monthlyMap = {};   // "2026-08" -> revenue
+        const clientMap = {};    // client name -> revenue
+
+        const now = new Date();
+        const currentMonthKey = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+
+        invoices.forEach(inv => {
+            totalRevenue += inv.grandTotal;
+
+            const invDate = new Date(inv.date);
+            const monthKey = `${invDate.getFullYear()}-${String(invDate.getMonth() + 1).padStart(2, '0')}`;
+            monthlyMap[monthKey] = (monthlyMap[monthKey] || 0) + inv.grandTotal;
+
+            if (monthKey === currentMonthKey) {
+                thisMonthRevenue += inv.grandTotal;
+                thisMonthCount++;
+            }
+
+            const clientName = inv.clientId ? inv.clientId.name : 'Unknown';
+            clientMap[clientName] = (clientMap[clientName] || 0) + inv.grandTotal;
+        });
+
+        const monthlyRevenue = Object.keys(monthlyMap)
+            .sort()
+            .map(month => ({ month, revenue: monthlyMap[month] }));
+
+        const topClients = Object.entries(clientMap)
+            .sort((a, b) => b[1] - a[1])
+            .slice(0, 5)
+            .map(([name, revenue]) => ({ name, revenue }));
+
+        res.json({
+            totalInvoices: invoices.length,
+            totalRevenue,
+            thisMonthInvoices: thisMonthCount,
+            thisMonthRevenue,
+            monthlyRevenue,
+            topClients
+        });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
 // Get one invoice by its database ID (must stay AFTER /search, or Express will
 // mistake the word "search" itself for an :id value)
 router.get('/:id', async (req, res) => {

@@ -552,3 +552,43 @@ body {
     width: 100%;
   }
 }
+
+/* ---------- Dashboard ---------- */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+  margin: 20px 0 30px;
+}
+
+.stat-card {
+  background: #f8f9fa;
+  border-left: 4px solid #007bff;
+  border-radius: 6px;
+  padding: 16px 18px;
+}
+
+.stat-label {
+  font-size: 13px;
+  color: #666;
+  margin-bottom: 6px;
+}
+
+.stat-value {
+  font-size: 24px;
+  font-weight: 600;
+  color: #007bff;
+}
+
+.chart-container {
+  background: #fff;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 24px;
+}
+
+.chart-container h4 {
+  margin-top: 0;
+  margin-bottom: 14px;
+}

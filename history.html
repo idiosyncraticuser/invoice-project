@@ -15,10 +15,13 @@
                 <p class="tagline">Powering Industries with Trust & Tech</p>
             </div>
         </div>
+    
         <div class="header-actions">
+            <a href="dashboard.html">Dashboard</a>
             <a href="index.html">+ New Invoice</a>
             <button onclick="logout()">Logout</button>
         </div>
+            
     </div>
     <h2>Invoice <span>History</span></h2>
     <a href="index.html">+ New Invoice</a>
@@ -52,19 +55,27 @@
     }
 
     async function searchInvoices() {
+    const tbody = document.querySelector('#historyTable tbody');
+    tbody.innerHTML = '<tr><td colspan="5">Loading...</td></tr>';
+
+    try {
         const invoiceNo = document.getElementById('searchInvoiceNo').value;
         const clientName = document.getElementById('searchClientName').value;
         const from = document.getElementById('searchFrom').value;
         const to = document.getElementById('searchTo').value;
 
         const params = new URLSearchParams({ invoiceNo, clientName, from, to });
-        const res = await fetch(API_BASE +'/api/invoices/search?' + params, {
+        const res = await fetch(API_BASE + '/api/invoices/search?' + params, {
             headers: { 'Authorization': 'Bearer ' + token }
         });
         const invoices = await res.json();
 
-        const tbody = document.querySelector('#historyTable tbody');
         tbody.innerHTML = '';
+        if (invoices.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="5">No invoices found.</td></tr>';
+            return;
+        }
+
         invoices.forEach(inv => {
             const tr = document.createElement('tr');
             tr.innerHTML = `
@@ -76,7 +87,11 @@
             `;
             tbody.appendChild(tr);
         });
+    } catch (err) {
+        tbody.innerHTML = '<tr><td colspan="5">Could not load invoices. Please check your connection.</td></tr>';
+        console.error('Search failed:', err);
     }
+}
 
     async function viewInvoice(id) {
         const res = await fetch(API_BASE +'/api/invoices/' + id, {
