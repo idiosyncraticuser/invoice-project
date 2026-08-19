@@ -2,6 +2,9 @@
 <html>
 <head>
   <title>Invoice History</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
   <link rel="stylesheet" href="style.css">
   
 </head>
@@ -17,6 +20,7 @@
         </div>
     
         <div class="header-actions">
+            <button id="themeToggleBtn" class="theme-toggle" onclick="toggleTheme()">🌙 Dark</button>
             <a href="dashboard.html">Dashboard</a>
             <a href="index.html">+ New Invoice</a>
             <button onclick="logout()">Logout</button>
@@ -44,6 +48,7 @@
 
     <div id="viewOutput" style="display:none; margin-top:20px;"></div>
   </div>
+  <script src="theme.js"></script>
   <script src="config.js"></script>
   <script>
     const token = localStorage.getItem('token');
