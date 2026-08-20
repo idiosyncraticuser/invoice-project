@@ -31,15 +31,15 @@
   <div class="container-main">
     
     <h2>Invoice <span>History</span></h2>
-    <a href="index.html">+ New Invoice</a>
-    <button onclick="logout()" style="float:right;">Logout</button>
+    <a href="index.html" class="btn-app" style="text-decoration:none; display:inline-block;">+ New Invoice</a>
+    
 
     <div style="margin:15px 0;">
       <input type="text" id="searchInvoiceNo" placeholder="Invoice No.">
       <input type="text" id="searchClientName" placeholder="Client Name">
       <input type="date" id="searchFrom">
       <input type="date" id="searchTo">
-      <button onclick="searchInvoices()">Search</button>
+      <button onclick="searchInvoices()" class="btn-app">Search</button>
     </div>
 
     <table id="historyTable" border="1" style="width:100%;">
@@ -91,7 +91,7 @@
                 <td>${new Date(inv.date).toLocaleDateString()}</td>
                 <td>${inv.clientId.name}</td>
                 <td>₹${inv.grandTotal.toFixed(2)}</td>
-                <td><button onclick="viewInvoice('${inv._id}')">View</button></td>
+                <td><button class="btn-app" onclick="viewInvoice('${inv._id}')">View</button></td>
             `;
             tbody.appendChild(tr);
         });
@@ -119,7 +119,7 @@
                 ${rows}
             </table>
             <p><strong>Grand Total: ₹${inv.grandTotal.toFixed(2)}</strong></p>
-            <button onclick="window.print()">Print</button>
+            <button class="btn-app" onclick="window.print()">Print</button>
         `;
         document.getElementById('viewOutput').style.display = 'block';
     }
