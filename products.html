@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Products - Kumawat Enterprises</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="theme.js"></script>
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+    <div class="header">
+        <a href="index.html" class="header-content-link">
+            <div class="header-content">
+                <img src="Black & Blue Minimalist Modern Initial Font Logo.png" alt="Logo" class="header-logo" />
+                <div>
+                    <h1>Kumawat Enterprises</h1>
+                    <p class="tagline">Powering Industries with Trust & Tech</p>
+                </div>
+            </div>
+        </a>
+        <div class="header-actions">
+            <button id="themeToggleBtn" class="theme-toggle" onclick="toggleTheme()">🌙 Dark</button>
+            <a href="index.html">Home</a>
+            <a href="dashboard.html">Dashboard</a>
+            <a href="history.html">View History</a>
+            <a href="quotation.html">Quotations</a>
+            <button onclick="logout()">Logout</button>
+        </div>
+    </div>
+
+    <div class="container-main">
+        <h2>Product <span>Catalog</span></h2>
+
+        <div class="add-item">
+    <h4 id="formTitle">Add Product</h4>
+    <div class="item-row">
+        <input type="text" id="pName" placeholder="Product Name" class="full-width">
+        <input type="text" id="pVariant" placeholder="Variant (optional)">
+        <input type="number" id="pPrice" placeholder="Price (₹)" min="0" step="0.01">
+        <input type="number" id="pGst" placeholder="GST (%)" min="0" step="0.5">
+        <input type="text" id="pUnit" placeholder="Unit" value="Piece">
+        <input type="text" id="pSku" placeholder="SKU – internal product code (optional)">
+        <input type="text" id="pHsn" placeholder="HSN/SAC – GST classification code (optional)">
+        <button onclick="saveProduct()" id="saveBtn" class="add-btn-style full-width">Save</button>
+    </div>
+    <p id="formError" class="login-error"></p>
+</div>
+
+        <div style="margin:15px 0;">
+            <input type="text" id="searchBox" placeholder="Search by name or SKU" oninput="loadProducts()">
+        </div>
+
+        <div class="items-table">
+            <table id="productsTable">
+                <thead>
+                    <tr>
+                        <th>Name</th><th>Variant</th><th>SKU</th><th>Price (₹)</th>
+                        <th>GST %</th><th>HSN</th><th>Unit</th><th>Status</th><th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="config.js"></script>
+    <script>
+        const token = localStorage.getItem('token');
+        if (!token) window.location.href = 'login.html';
+
+        function logout() {
+            localStorage.removeItem('token');
+            window.location.href = 'login.html';
+        }
+
+        let editingId = null;
+
+        async function loadProducts() {
+            const tbody = document.querySelector('#productsTable tbody');
+            tbody.innerHTML = '<tr><td colspan="9">Loading...</td></tr>';
+            try {
+                const res = await fetch(API_BASE + '/api/products/all', {
+                    headers: { 'Authorization': 'Bearer ' + token }
+                });
+                let products = await res.json();
+
+                const q = document.getElementById('searchBox').value.trim().toLowerCase();
+                if (q) {
+                    products = products.filter(p =>
+                        p.name.toLowerCase().includes(q) || (p.sku || '').toLowerCase().includes(q)
+                    );
+                }
+
+                tbody.innerHTML = '';
+                if (products.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="9">No products found.</td></tr>';
+                    return;
+                }
+
+                products.forEach(p => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>${p.name}</td>
+                        <td>${p.variant || '-'}</td>
+                        <td>${p.sku || '-'}</td>
+                        <td>₹${p.price.toFixed(2)}</td>
+                        <td>${p.gst}%</td>
+                        <td>${p.hsn || '-'}</td>
+                        <td>${p.unit}</td>
+                        <td>${p.active ? 'Active' : 'Deactivated'}</td>
+                        <td>
+                            <button class="btn-app" onclick='editProduct(${JSON.stringify(p)})'>Edit</button>
+                            ${p.active ? `<button class="btn-app" onclick="deactivateProduct('${p._id}')">Deactivate</button>` : ''}
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            } catch (err) {
+                tbody.innerHTML = '<tr><td colspan="9">Could not load products.</td></tr>';
+                console.error('Load products failed:', err);
+            }
+        }
+
+        function editProduct(p) {
+            editingId = p._id;
+            document.getElementById('pName').value = p.name;
+            document.getElementById('pVariant').value = p.variant || '';
+            document.getElementById('pSku').value = p.sku || '';
+            document.getElementById('pPrice').value = p.price;
+            document.getElementById('pGst').value = p.gst;
+            document.getElementById('pHsn').value = p.hsn || '';
+            document.getElementById('pUnit').value = p.unit;
+            document.getElementById('formTitle').textContent = 'Edit Product';
+            document.getElementById('saveBtn').textContent = 'Update';
+            window.scrollTo(0, 0);
+        }
+
+        function clearForm() {
+            editingId = null;
+            document.getElementById('pName').value = '';
+            document.getElementById('pVariant').value = '';
+            document.getElementById('pSku').value = '';
+            document.getElementById('pPrice').value = '';
+            document.getElementById('pGst').value = '';
+            document.getElementById('pHsn').value = '';
+            document.getElementById('pUnit').value = 'Piece';
+            document.getElementById('formTitle').textContent = 'Add Product';
+            document.getElementById('saveBtn').textContent = 'Save';
+            document.getElementById('formError').textContent = '';
+        }
+
+        async function saveProduct() {
+            const name = document.getElementById('pName').value.trim();
+            const variant = document.getElementById('pVariant').value.trim();
+            const sku = document.getElementById('pSku').value.trim();
+            const price = parseFloat(document.getElementById('pPrice').value);
+            const gst = parseFloat(document.getElementById('pGst').value);
+            const hsn = document.getElementById('pHsn').value.trim();
+            const unit = document.getElementById('pUnit').value.trim() || 'Piece';
+
+            if (!name || isNaN(price) || price < 0 || isNaN(gst) || gst < 0) {
+                document.getElementById('formError').textContent = 'Name, a valid price, and GST are required.';
+                return;
+            }
+
+            const body = { name, variant, sku, price, gst, hsn, unit };
+            const url = editingId ? API_BASE + '/api/products/' + editingId : API_BASE + '/api/products';
+            const method = editingId ? 'PUT' : 'POST';
+
+            try {
+                const res = await fetch(url, {
+                    method,
+                    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+                    body: JSON.stringify(body)
+                });
+                const data = await res.json();
+                if (!res.ok) {
+                    document.getElementById('formError').textContent = data.error;
+                    return;
+                }
+                clearForm();
+                loadProducts();
+            } catch (err) {
+                document.getElementById('formError').textContent = 'Could not save product. Check your connection.';
+                console.error('Save product failed:', err);
+            }
+        }
+
+        async function deactivateProduct(id) {
+            if (!confirm('Deactivate this product? It will no longer appear in the invoice picker, but existing invoices are unaffected.')) return;
+            try {
+                await fetch(API_BASE + '/api/products/' + id, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': 'Bearer ' + token }
+                });
+                loadProducts();
+            } catch (err) {
+                alert('Could not deactivate product.');
+                console.error(err);
+            }
+        }
+
+        loadProducts();
+    </script>
+</body>
+</html>

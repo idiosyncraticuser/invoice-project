@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quotation History</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="theme.js"></script>
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+    <div class="header">
+        <a href="index.html" class="header-content-link">
+            <div class="header-content">
+                <img src="Black & Blue Minimalist Modern Initial Font Logo.png" alt="Logo" class="header-logo" />
+                <div>
+                    <h1>Kumawat Enterprises</h1>
+                    <p class="tagline">Powering Industries with Trust & Tech</p>
+                </div>
+            </div>
+        </a>
+        <div class="header-actions">
+            <button id="themeToggleBtn" class="theme-toggle" onclick="toggleTheme()">🌙 Dark</button>
+            <a href="index.html">Home</a>
+            <a href="quotation.html">+ New Quotation</a>
+            <button onclick="logout()">Logout</button>
+        </div>
+    </div>
+
+    <div class="container-main">
+        <h2>Quotation <span>History</span></h2>
+
+        <div style="margin:15px 0;">
+            <input type="text" id="searchQuotationNo" placeholder="Quotation No.">
+            <input type="text" id="searchClientName" placeholder="Client Name">
+            <input type="date" id="searchFrom">
+            <input type="date" id="searchTo">
+            <button onclick="searchQuotations()" class="btn-app">Search</button>
+        </div>
+
+        <table id="historyTable" border="1" style="width:100%;">
+            <thead>
+                <tr><th>Quotation No.</th><th>Date</th><th>Client</th><th>Grand Total</th><th>View</th></tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+
+        <div id="viewOutput" style="display:none; margin-top:20px;"></div>
+    </div>
+
+    <script src="config.js"></script>
+    <script>
+        const token = localStorage.getItem('token');
+        if (!token) window.location.href = 'login.html';
+
+        function logout() {
+            localStorage.removeItem('token');
+            window.location.href = 'login.html';
+        }
+
+        async function searchQuotations() {
+            const tbody = document.querySelector('#historyTable tbody');
+            tbody.innerHTML = '<tr><td colspan="5">Loading...</td></tr>';
+            try {
+                const quotationNo = document.getElementById('searchQuotationNo').value;
+                const clientName = document.getElementById('searchClientName').value;
+                const from = document.getElementById('searchFrom').value;
+                const to = document.getElementById('searchTo').value;
+
+                const params = new URLSearchParams({ quotationNo, clientName, from, to });
+                const res = await fetch(API_BASE + '/api/quotations/search?' + params, {
+                    headers: { 'Authorization': 'Bearer ' + token }
+                });
+                const quotations = await res.json();
+
+                tbody.innerHTML = '';
+                if (quotations.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="5">No quotations found.</td></tr>';
+                    return;
+                }
+
+                quotations.forEach(q => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>${q.quotationNo}</td>
+                        <td>${new Date(q.date).toLocaleDateString()}</td>
+                        <td>${q.clientId.name}</td>
+                        <td>₹${q.grandTotal.toFixed(2)}</td>
+                        <td><button class="btn-app" onclick="viewQuotation('${q._id}')">View</button></td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            } catch (err) {
+                tbody.innerHTML = '<tr><td colspan="5">Could not load quotations.</td></tr>';
+                console.error('Search failed:', err);
+            }
+        }
+
+        async function viewQuotation(id) {
+            const res = await fetch(API_BASE + '/api/quotations/' + id, {
+                headers: { 'Authorization': 'Bearer ' + token }
+            });
+            const q = await res.json();
+
+            let rows = q.items.map(i => `
+                <tr><td>${i.desc}</td><td>${i.qty}</td><td>₹${i.price}</td>
+                <td>${i.discount}%</td><td>${i.cgst}%</td><td>${i.sgst}%</td></tr>
+            `).join('');
+
+            document.getElementById('viewOutput').innerHTML = `
+                <h4>Quotation #${q.quotationNo} — ${q.clientId.name}</h4>
+                <table border="1" style="width:100%;">
+                    <tr><th>Desc</th><th>Qty</th><th>Price</th><th>Disc%</th><th>CGST%</th><th>SGST%</th></tr>
+                    ${rows}
+                </table>
+                <p><strong>Grand Total: ₹${q.grandTotal.toFixed(2)}</strong></p>
+                <button class="btn-app" onclick="window.print()">Print</button>
+            `;
+            document.getElementById('viewOutput').style.display = 'block';
+        }
+
+        searchQuotations();
+    </script>
+</body>
+</html>

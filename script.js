@@ -16,6 +16,45 @@ function generateInvoiceNumber() {
   return "INV-" + paddedNumber;
 }
 
+document.getElementById('productSearch').addEventListener('input', async function() {
+    const q = this.value.trim();
+    const resultsDiv = document.getElementById('productResults');
+    if (!q) { resultsDiv.innerHTML = ''; resultsDiv.style.display = 'none'; return; }
+    try {
+        const res = await fetch(API_BASE + '/api/products/search?q=' + encodeURIComponent(q), {
+            headers: { 'Authorization': 'Bearer ' + token }
+        });
+        const products = await res.json();
+        resultsDiv.innerHTML = '';
+        if (products.length === 0) {
+            resultsDiv.innerHTML = '<div class="product-result-item">No products found</div>';
+        } else {
+            products.forEach(p => {
+                const div = document.createElement('div');
+                div.className = 'product-result-item';
+                div.textContent = p.name + (p.variant ? ' - ' + p.variant : '') + ' (₹' + p.price + ')';
+                div.onclick = () => selectProduct(p);
+                resultsDiv.appendChild(div);
+            });
+        }
+        resultsDiv.style.display = 'block';
+    } catch (err) {
+        console.error('Product search failed:', err);
+    }
+});
+
+function selectProduct(p) {
+    document.getElementById('itemDesc').value = p.name + (p.variant ? ' - ' + p.variant : '');
+    document.getElementById('itemPrice').value = p.price;
+    document.getElementById('itemCGST').value = p.gst / 2;
+    document.getElementById('itemSGST').value = p.gst / 2;
+    selectedProductId = p._id;
+    document.getElementById('productSearch').value = '';
+    document.getElementById('productResults').innerHTML = '';
+    document.getElementById('productResults').style.display = 'none';
+    document.getElementById('itemQty').focus();
+}
+
 function addItem() {
   const desc = document.getElementById("itemDesc").value.trim(); //trim() to remove whitespace from both ends of a string
   const qty = parseInt(document.getElementById("itemQty").value);
@@ -30,7 +69,8 @@ function addItem() {
     return;
   }
 
-  items.push({ desc, qty, price, discount, cgst, sgst }); //elements pushed in "items" array
+  items.push({ desc, qty, price, discount, cgst, sgst, productId: selectedProductId });
+  selectedProductId = null; //elements pushed in "items" array
 
   // Clear fields
   document.getElementById("itemDesc").value = "";

@@ -1,64 +1,48 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Simple Invoice Generator</title>
+    <title>Quotation Generator</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-
-    <!-- Bootstrap CSS -->
-    <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"> -->
-    <!-- Link CSS -->
-    <link rel="stylesheet" href="style.css" />
-
-
-
-    <!-- JS Scripts -->
     <script src="theme.js"></script>
-    <script src="config.js"></script>
-    <script src="script.js" defer></script>
-    <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script> -->
+    <link rel="stylesheet" href="style.css" />
+    <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"></script> -->
 </head>
-
 <body>
     <div class="header">
-    <a href="index.html" class="header-content-link">
-        <div class="header-content">
-            <img src="Black & Blue Minimalist Modern Initial Font Logo.png" alt="Logo" class="header-logo" />
-            <div>
-                <h1>Kumawat Enterprises</h1>
-                <p class="tagline">Powering Industries with Trust & Tech</p>
+        <a href="index.html" class="header-content-link">
+            <div class="header-content">
+                <img src="Black & Blue Minimalist Modern Initial Font Logo.png" alt="Logo" class="header-logo" />
+                <div>
+                    <h1>Kumawat Enterprises</h1>
+                    <p class="tagline">Powering Industries with Trust & Tech</p>
+                </div>
             </div>
+        </a>
+        <div class="header-actions">
+            <button id="themeToggleBtn" class="theme-toggle" onclick="toggleTheme()">🌙 Dark</button>
+            <a href="index.html">Home</a>
+            <a href="dashboard.html">Dashboard</a>
+            <a href="products.html">Products</a>
+            <a href="quotation-history.html">Quotation History</a>
+            <button onclick="logout()">Logout</button>
         </div>
-    </a>
-    <div class="header-actions">
-        <button id="themeToggleBtn" class="theme-toggle" onclick="toggleTheme()">🌙 Dark</button>
-        <a href="index.html">Home</a>
-        <a href="dashboard.html">Dashboard</a>
-        <a href="products.html">Products</a>
-        <a href="quotation.html">Quotations</a>
-        <a href="history.html">View History</a>
-        <button onclick="logout()">Logout</button>
     </div>
-</div>
 
-<div class="container-main">
-    <!-- rest of page content -->
-        <h2>Invoice <span>Generator</span></h2>
-        
+    <div class="container-main">
+        <h2>Quotation <span>Generator</span></h2>
 
-        <!-- Invoice Info -->
         <div class="invoice-details">
             <div>
                 <div>
-                    <label class="invoice-no" for="invoiceNo">Invoice No.</label>
-                    <input type="text" id="invoiceNo" readonly>
+                    <label class="invoice-no" for="quotationNo">Quotation No.</label>
+                    <input type="text" id="quotationNo" readonly>
                 </div>
                 <div>
-                    <label for="invoiceDate">Date</label>
-                    <input type="date" id="invoiceDate">
+                    <label for="quotationDate">Date</label>
+                    <input type="date" id="quotationDate">
                 </div>
             </div>
             <div>
@@ -76,7 +60,6 @@
             </div>
         </div>
 
-        <!-- Add Item -->
         <div class="add-item">
     <h4>Add Item</h4>
     <div class="item-row">
@@ -94,27 +77,18 @@
     </div>
 </div>
 
-        <!-- Items Table -->
         <div class="items-table">
             <table id="itemsTable">
                 <thead>
                     <tr>
-                        <th>S.No.</th>
-                        <th>Description</th>
-                        <th>Qty</th>
-                        <th>Unit Price (₹)</th>
-                        <th>Discount %</th>
-                        <th>CGST %</th>
-                        <th>SGST %</th>
-                        <th>Total (₹)</th>
-                        <th>Remove</th>
+                        <th>S.No.</th><th>Description</th><th>Qty</th><th>Unit Price (₹)</th>
+                        <th>Discount %</th><th>CGST %</th><th>SGST %</th><th>Total (₹)</th><th>Remove</th>
                     </tr>
                 </thead>
                 <tbody></tbody>
             </table>
         </div>
 
-        <!-- Totals -->
         <div class="totals">
             <div>Subtotal: ₹<span id="subtotal">0.00</span></div>
             <div>Total Discount: ₹<span id="discountTotal">0.00</span></div>
@@ -123,26 +97,16 @@
             <div><strong>Grand Total: ₹<span id="grandTotal">0.00</span></strong></div>
         </div>
 
-        <!-- Actions -->
         <div class="actions">
-            <button onclick="generateInvoice()" id="generateBtn">Generate Invoice</button>
-            <button onclick="printInvoice()" id="printBtn" disabled>Print</button>
-            <button onclick="resetInvoice()">Reset</button>
+            <button onclick="generateQuotation()" id="generateBtn">Generate Quotation</button>
+            <button onclick="printQuotation()" id="printBtn" disabled>Print</button>
+            <button onclick="resetQuotation()">Reset</button>
         </div>
 
-        <!-- Output -->
-        <div id="invoiceOutput" style="display:none; margin-top:30px;"></div>
+        <div id="quotationOutput" style="display:none; margin-top:30px;"></div>
     </div>
 
-    <div class="footer">
-        <div class="footer-content">
-            <div>&copy;<?php echo date("Y"); ?> Kumawat Enterprises&trade;</div>
-            <div>All Rights Reserved &reg;</div>
-            <div>Email: kumawatenterprises@gmail.com</div>
-            
-        </div>
-    </div>
-
+    <script src="config.js"></script>
+    <script src="quotation.js"></script>
 </body>
-
 </html>

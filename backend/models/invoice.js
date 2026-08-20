@@ -1,15 +1,5 @@
 const mongoose = require('mongoose');
-
-// This describes the shape of ONE item inside the items array.
-// It does NOT get its own mongoose.model() — it only exists inside an Invoice.
-const itemSchema = new mongoose.Schema({
-    desc: { type: String, required: true },
-    qty: { type: Number, required: true },
-    price: { type: Number, required: true },
-    discount: { type: Number, default: 0 },
-    cgst: { type: Number, default: 0 },
-    sgst: { type: Number, default: 0 }
-}, { _id: false });
+const itemSchema = require('./itemSchema');
 
 const invoiceSchema = new mongoose.Schema({
     invoiceNo: {
@@ -23,7 +13,7 @@ const invoiceSchema = new mongoose.Schema({
     },
     clientId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'client',
+        ref: 'Client',
         required: true
     },
     items: [itemSchema],
@@ -34,8 +24,8 @@ const invoiceSchema = new mongoose.Schema({
     grandTotal: Number,
     createdBy: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'user'
+        ref: 'User'
     }
 }, { timestamps: true });
 
-module.exports = mongoose.model('invoice', invoiceSchema);
+module.exports = mongoose.model('Invoice', invoiceSchema);

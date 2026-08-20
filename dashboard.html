@@ -1,135 +1,210 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
+  <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Dashboard - Kumawat Enterprises</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
 
     <link rel="stylesheet" href="style.css" />
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-</head>
-<body>
+  </head>
+  <body>
     <div class="header">
-    <a href="index.html" class="header-content-link">
+      <a href="index.html" class="header-content-link">
         <div class="header-content">
-            <img src="Black & Blue Minimalist Modern Initial Font Logo.png" alt="Logo" class="header-logo" />
-            <div>
-                <h1>Kumawat Enterprises</h1>
-                <p class="tagline">Powering Industries with Trust & Tech</p>
-            </div>
+          <img
+            src="Black & Blue Minimalist Modern Initial Font Logo.png"
+            alt="Logo"
+            class="header-logo"
+          />
+          <div>
+            <h1>Kumawat Enterprises</h1>
+            <p class="tagline">Powering Industries with Trust & Tech</p>
+          </div>
         </div>
-    </a>
-    <div class="header-actions">
-        <button id="themeToggleBtn" class="theme-toggle" onclick="toggleTheme()">🌙 Dark</button>
+      </a>
+      <div class="header-actions">
+        <button
+          id="themeToggleBtn"
+          class="theme-toggle"
+          onclick="toggleTheme()"
+        >
+          🌙 Dark
+        </button>
         <a href="index.html">Home</a>
         <a href="dashboard.html">Dashboard</a>
         <a href="history.html">View History</a>
         <button onclick="logout()">Logout</button>
+      </div>
     </div>
-</div>
 
-<div class="container-main">
-    <!-- rest of page content -->
-        <h2>Dashboard <span>Insights</span></h2>
+    <div class="container-main">
+      <!-- rest of page content -->
+      <h2>Dashboard <span>Insights</span></h2>
 
-        <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-label">Total Invoices</div>
-                <div class="stat-value" id="statTotalInvoices">-</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-label">Total Revenue</div>
-                <div class="stat-value">₹<span id="statTotalRevenue">-</span></div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-label">Invoices This Month</div>
-                <div class="stat-value" id="statMonthInvoices">-</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-label">Revenue This Month</div>
-                <div class="stat-value">₹<span id="statMonthRevenue">-</span></div>
-            </div>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-label">Total Invoices</div>
+          <div class="stat-value" id="statTotalInvoices">-</div>
         </div>
-
-        <div class="chart-container">
-            <h4>Monthly Revenue</h4>
-            <canvas id="monthlyChart"></canvas>
+        <div class="stat-card">
+          <div class="stat-label">Total Revenue</div>
+          <div class="stat-value">₹<span id="statTotalRevenue">-</span></div>
         </div>
-
-        <div class="chart-container">
-            <h4>Top 5 Clients by Revenue</h4>
-            <canvas id="clientsChart"></canvas>
+        <div class="stat-card">
+          <div class="stat-label">Invoices This Month</div>
+          <div class="stat-value" id="statMonthInvoices">-</div>
         </div>
+        <div class="stat-card">
+          <div class="stat-label">Revenue This Month</div>
+          <div class="stat-value">₹<span id="statMonthRevenue">-</span></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Average Invoice Value</div>
+          <div class="stat-value">₹<span id="statAvgInvoice">-</span></div>
+        </div>
+      </div>
 
-        <p id="dashboardStatus"></p>
+      <div class="chart-container">
+        <h4>Monthly Revenue</h4>
+        <canvas id="monthlyChart"></canvas>
+      </div>
+
+      <div class="chart-container">
+        <h4>Top 5 Clients by Revenue</h4>
+        <canvas id="clientsChart"></canvas>
+      </div>
+      <div class="chart-container">
+        <h4>Top 5 Products by Revenue</h4>
+        <table id="topProductsRevenueTable" style="width: 100%">
+          <thead>
+            <tr>
+              <th style="text-align: left">Product</th>
+              <th style="text-align: right">Revenue</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+
+      <div class="chart-container">
+        <h4>Top 5 Products by Quantity Sold</h4>
+        <table id="topProductsQtyTable" style="width: 100%">
+          <thead>
+            <tr>
+              <th style="text-align: left">Product</th>
+              <th style="text-align: right">Quantity</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+
+      <div class="chart-container">
+        <h4>Revenue by GST Rate</h4>
+        <table id="revenueByGSTTable" style="width: 100%">
+          <thead>
+            <tr>
+              <th style="text-align: left">GST Rate</th>
+              <th style="text-align: right">Revenue</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+
+      <p id="dashboardStatus"></p>
     </div>
     <script src="theme.js"></script>
     <script src="config.js"></script>
     <script>
-        const token = localStorage.getItem('token');
-        if (!token) window.location.href = 'login.html';
+      const token = localStorage.getItem("token");
+      if (!token) window.location.href = "login.html";
 
-        function logout() {
-            localStorage.removeItem('token');
-            window.location.href = 'login.html';
+      function logout() {
+        localStorage.removeItem("token");
+        window.location.href = "login.html";
+      }
+
+      async function loadDashboard() {
+        const statusEl = document.getElementById("dashboardStatus");
+        statusEl.textContent = "Loading insights...";
+
+        try {
+          const res = await fetch(API_BASE + "/api/invoices/stats", {
+            headers: { Authorization: "Bearer " + token },
+          });
+          const stats = await res.json();
+
+          if (!res.ok) {
+            statusEl.textContent = "Could not load dashboard: " + stats.error;
+            return;
+          }
+
+          statusEl.textContent = "";
+          document.getElementById("statTotalInvoices").textContent =
+            stats.totalInvoices;
+          document.getElementById("statTotalRevenue").textContent =
+            stats.totalRevenue.toFixed(2);
+          document.getElementById("statMonthInvoices").textContent =
+            stats.thisMonthInvoices;
+          document.getElementById("statMonthRevenue").textContent =
+            stats.thisMonthRevenue.toFixed(2);
+                          document.getElementById('statAvgInvoice').textContent = stats.averageInvoiceValue.toFixed(2);
+
+                renderStatsTable('topProductsRevenueTable', stats.topProductsByRevenue,
+                    p => `<tr><td>${p.name}</td><td style="text-align:right;">₹${p.revenue.toFixed(2)}</td></tr>`);
+                renderStatsTable('topProductsQtyTable', stats.topProductsByQty,
+                    p => `<tr><td>${p.name}</td><td style="text-align:right;">${p.qty}</td></tr>`);
+                renderStatsTable('revenueByGSTTable', stats.revenueByGST,
+                    g => `<tr><td>${g.rate}</td><td style="text-align:right;">₹${g.revenue.toFixed(2)}</td></tr>`);
+
+          new Chart(document.getElementById("monthlyChart"), {
+            type: "bar",
+            data: {
+              labels: stats.monthlyRevenue.map((m) => m.month),
+              datasets: [
+                {
+                  label: "Revenue (₹)",
+                  data: stats.monthlyRevenue.map((m) => m.revenue),
+                  backgroundColor: "#007bff",
+                },
+              ],
+            },
+            options: { responsive: true },
+          });
+
+          new Chart(document.getElementById("clientsChart"), {
+            type: "bar",
+            data: {
+              labels: stats.topClients.map((c) => c.name),
+              datasets: [
+                {
+                  label: "Revenue (₹)",
+                  data: stats.topClients.map((c) => c.revenue),
+                  backgroundColor: "#28a745",
+                },
+              ],
+            },
+            options: { responsive: true, indexAxis: "y" },
+          });
+        } catch (err) {
+          statusEl.textContent =
+            "Could not reach server. Please check your connection.";
+          console.error("Dashboard load failed:", err);
         }
+      }
 
-        async function loadDashboard() {
-            const statusEl = document.getElementById('dashboardStatus');
-            statusEl.textContent = 'Loading insights...';
-
-            try {
-                const res = await fetch(API_BASE + '/api/invoices/stats', {
-                    headers: { 'Authorization': 'Bearer ' + token }
-                });
-                const stats = await res.json();
-
-                if (!res.ok) {
-                    statusEl.textContent = 'Could not load dashboard: ' + stats.error;
-                    return;
-                }
-
-                statusEl.textContent = '';
-                document.getElementById('statTotalInvoices').textContent = stats.totalInvoices;
-                document.getElementById('statTotalRevenue').textContent = stats.totalRevenue.toFixed(2);
-                document.getElementById('statMonthInvoices').textContent = stats.thisMonthInvoices;
-                document.getElementById('statMonthRevenue').textContent = stats.thisMonthRevenue.toFixed(2);
-
-                new Chart(document.getElementById('monthlyChart'), {
-                    type: 'bar',
-                    data: {
-                        labels: stats.monthlyRevenue.map(m => m.month),
-                        datasets: [{
-                            label: 'Revenue (₹)',
-                            data: stats.monthlyRevenue.map(m => m.revenue),
-                            backgroundColor: '#007bff'
-                        }]
-                    },
-                    options: { responsive: true }
-                });
-
-                new Chart(document.getElementById('clientsChart'), {
-                    type: 'bar',
-                    data: {
-                        labels: stats.topClients.map(c => c.name),
-                        datasets: [{
-                            label: 'Revenue (₹)',
-                            data: stats.topClients.map(c => c.revenue),
-                            backgroundColor: '#28a745'
-                        }]
-                    },
-                    options: { responsive: true, indexAxis: 'y' }
-                });
-
-            } catch (err) {
-                statusEl.textContent = 'Could not reach server. Please check your connection.';
-                console.error('Dashboard load failed:', err);
-            }
+      loadDashboard();
+              function renderStatsTable(tableId, data, rowFn) {
+            const tbody = document.querySelector('#' + tableId + ' tbody');
+            tbody.innerHTML = (data && data.length) ? data.map(rowFn).join('') : '<tr><td colspan="2">No data yet</td></tr>';
         }
-
-        loadDashboard();
     </script>
-</body>
+  </body>
 </html>
