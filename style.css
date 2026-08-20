@@ -271,15 +271,42 @@ th { background: var(--table-header-bg); }
 
 @media print {
   @page { size: A4 portrait; margin: 10mm; }
-  body * { visibility: hidden; }
-  #invoiceOutput, #invoiceOutput * { visibility: visible; }
-  #invoiceOutput { position: absolute; left: 0; top: 0; width: 100%; }
-}
-@media print {
-  #viewOutput, #viewOutput * { visibility: visible; }
-  #viewOutput { position: absolute; left: 0; top: 0; width: 100%; }
-}
 
+  body {
+    background: #ffffff !important;
+  }
+
+  body::before, body::after {
+    display: none !important;
+  }
+
+  body * { visibility: hidden; }
+
+  #invoiceOutput, #invoiceOutput *,
+  #viewOutput, #viewOutput * {
+    visibility: visible;
+  }
+
+  #invoiceOutput, #viewOutput {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    background: #ffffff !important;
+    color: #000000 !important;
+  }
+
+  #invoiceOutput *, #viewOutput * {
+    background: #ffffff !important;
+    color: #000000 !important;
+    border-color: #000000 !important;
+    box-shadow: none !important;
+  }
+
+  .login-btn, .btn-app, button {
+    display: none !important;
+  }
+}
 /* ---------- Login Page ---------- */
 :root {
   --login-grid-color: rgba(0, 123, 255, 0.08);
