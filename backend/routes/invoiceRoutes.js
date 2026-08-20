@@ -1,3 +1,4 @@
+const Counter = require('../models/counter');
 const express = require('express');
 const router = express.Router();
 const Invoice = require('../models/invoice');
@@ -16,16 +17,18 @@ router.get('/check/:invoiceNo', async (req, res) => {
 // Save a new invoice
 router.post('/', async (req, res) => {
     try {
-        const { invoiceNo, date, clientName, clientAddress, items,
+        const { date, clientName, clientAddress, items,
                 subtotal, totalDiscount, totalCGST, totalSGST, grandTotal } = req.body;
 
-        // Reject duplicate invoice numbers (the real, database-level check from FR-6)
-        const existing = await Invoice.findOne({ invoiceNo });
-        if (existing) {
-            return res.status(400).json({ error: 'Invoice number already exists' });
-        }
+        // Atomically get the next invoice number — safe even if two
+        // requests hit this exact line at the same time
+        const counter = await Counter.findOneAndUpdate(
+            { name: 'invoiceNo' },
+            { $inc: { seq: 1 } },
+            { new: true, upsert: true }
+        );
+        const invoiceNo = 'INV-' + String(counter.seq).padStart(4, '0');
 
-        // Find an existing client with this name, or create a new one
         let client = await Client.findOne({ name: clientName });
         if (!client) {
             client = await Client.create({ name: clientName, address: clientAddress });
@@ -132,6 +135,16 @@ router.get('/stats', async (req, res) => {
 });
 // Get one invoice by its database ID (must stay AFTER /search, or Express will
 // mistake the word "search" itself for an :id value)
+router.get('/next-number', async (req, res) => {
+    try {
+        const counter = await Counter.findOne({ name: 'invoiceNo' });
+        const nextSeq = counter ? counter.seq + 1 : 1;
+        res.json({ invoiceNo: 'INV-' + String(nextSeq).padStart(4, '0') });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
 router.get('/:id', async (req, res) => {
     try {
         const invoice = await Invoice.findById(req.params.id).populate('clientId');

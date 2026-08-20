@@ -6,8 +6,13 @@ const User = require('./models/user');
 async function createAdmin() {
     await mongoose.connect(process.env.MONGODB_URI);
 
-    const username = 'rajneesh';       
-    const plainPassword = 'g8k0-K$B3UmFn2L';   
+    const username = process.env.ADMIN_USERNAME;
+    const plainPassword = process.env.ADMIN_PASSWORD;
+
+    if (!username || !plainPassword) {
+        console.log('❌ ADMIN_USERNAME or ADMIN_PASSWORD missing from .env');
+        return process.exit(1);
+    }
 
     const existing = await User.findOne({ username });
     if (existing) {
@@ -16,7 +21,6 @@ async function createAdmin() {
     }
 
     const passwordHash = await bcrypt.hash(plainPassword, 10);
-
     await User.create({ username, passwordHash, role: 'admin' });
     console.log('✅ Admin user created:', username);
     process.exit();
